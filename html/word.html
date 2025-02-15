@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+     <meta id="viewport" name="viewport" content="width=1920, initial-scale=1">
+    <script>
+        (function() {
+            const designWidth = 1920; // 设计稿宽度
+            function setScale() {
+                let viewport = document.getElementById('viewport');
+                let scale = window.innerWidth / designWidth;
+                viewport.content = `width=${designWidth}, initial-scale=${scale}, minimum-scale=${scale}, maximum-scale=${scale}, user-scalable=no`;
+            }
+            setScale();
+            window.addEventListener('resize', setScale);
+        })();
+    </script>
+    <title>my word</title>
+    <style>
+        body {
+            background-color: #e14154; /* 背景颜色：粉色 */
+            color: #000;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            height: 100vh; /* 让 body 高度填满浏览器 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin: 0;
+            cursor: pointer; /* 提示用户点击进入全屏 */
+            overflow: hidden; /* 隐藏超出的部分 */
+        }
+
+        #text {
+            font-size: 36px;
+            font-weight: bold;
+            opacity: 0;
+            white-space: normal; /* 允许自动换行 */
+            word-wrap: break-word; /* 超过宽度时换行 */
+            width: 80%; /* 设置最大宽度 */
+            max-width: 80vw; /* 最大宽度为视窗的80% */
+            text-align: left; /* 从左对齐 */
+            transition: opacity 2s ease-out; /* 控制文字的显示速度 */
+            margin-left: 10vw; /* 使文字从左边距开始 */
+        }
+
+        #nextButton {
+            display: none; /* 默认隐藏 "下一页" 按钮 */
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #41e1ce; /* 背景颜色 */
+            color: #e15e41;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #nextButton:hover {
+            background-color: #e141a1; /* 按钮悬停时颜色 */
+        }
+    </style>
+</head>
+
+<body onclick="requestFullScreen()">
+
+    <div id="text"></div>
+    <button id="nextButton" onclick="goToNextPage()">下一页</button>
+
+    <script>
+        // 显示文本的动画效果，每次显示一个字
+        function typeText() {
+            const textElement = document.getElementById("text");
+            const text = "Hello Yuri, in the blink of an eye you are 19 years old na,We have known each other for so many years by accident. During the time we met, the youth we shared with you was no less than love. I hope you can be the best version of yourself at the best age and always be happy. You should never compromise yourself. In the days when we cannot meet in person, we should confide in each other and be gentle with each other.";
+            let index = 0;
+
+            // 清空之前的文本
+            textElement.textContent = "";
+
+            // 每隔 100ms 添加一个字
+            const interval = setInterval(function() {
+                textElement.textContent += text[index];
+                index++;
+                if (index === text.length) {
+                    clearInterval(interval);  // 文字全部显示后清除间隔
+                    setTimeout(function() {
+                        document.getElementById("nextButton").style.display = "inline-block"; // 文字打印结束后显示按钮
+                    }, 500);  // 文字显示完毕后 0.5秒显示按钮
+                }
+            }, 100);  // 每100ms显示一个字
+        }
+
+        // 点击 "下一页" 按钮跳转到指定页面
+        function goToNextPage() {
+            window.location.href = "nextpage.html"; // 替换为你想跳转的页面地址
+        }
+
+        // 自动进入全屏的函数
+        function requestFullScreen() {
+            var elem = document.documentElement; // 获取整个网页元素
+
+            // 启动全屏的不同浏览器兼容方法
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.mozRequestFullScreen) { // Firefox
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) { // Chrome, Safari, Opera
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) { // IE/Edge
+                elem.msRequestFullscreen();
+            }
+        }
+
+        // 页面加载后执行
+        window.onload = function () {
+            requestFullScreen();  // 进入全屏
+            setTimeout(typeText, 1000);  // 延时1秒后显示文字
+        };
+    </script>
+
+</body>
+
+</html>
