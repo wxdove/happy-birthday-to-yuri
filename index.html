@@ -3,39 +3,64 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Happy Birthday</title>
     <link rel="stylesheet" type="text/css" href="css/styles.css">
     <meta id="viewport" name="viewport" content="width=1920, initial-scale=1">
+    <style>
+        /* 新增核心样式 */
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: white;
+        }
+        #scaler {
+            width: 1920px;   /* 设计稿宽度 */
+            height: 1080px;  /* 设计稿高度 */
+            transform-origin: 0 0;
+            position: fixed;
+        }
+        /* 移除干扰样式 */
+        .iframepage {
+            -webkit-overflow-scrolling: touch;
+            overflow: hidden; /* 改为隐藏滚动 */
+        }
+        ::-webkit-scrollbar {
+            display: none; /* 完全隐藏滚动条 */
+        }
+    </style>
     <script>
         (function() {
-            const designWidth = 1920; // 设计稿宽度
+            const designWidth = 1920;
+            const scaler = document.createElement('div');
+            scaler.id = 'scaler';
+
+            // 将原有内容移动到scaler容器
+            document.addEventListener('DOMContentLoaded', function() {
+                const content = document.body.innerHTML;
+                document.body.innerHTML = '';
+                scaler.innerHTML = content;
+                document.body.appendChild(scaler);
+            });
+
             function setScale() {
-                let viewport = document.getElementById('viewport');
-                let scale = window.innerWidth / designWidth;
+                const scale = Math.min(
+                    window.innerWidth / designWidth,
+                    window.innerHeight / 1080 // 设计稿高度
+                );
+                scaler.style.transform = `scale(${scale})`;
+
+                // 同步更新viewport（兼容性方案）
+                const viewport = document.getElementById('viewport');
                 viewport.content = `width=${designWidth}, initial-scale=${scale}, minimum-scale=${scale}, maximum-scale=${scale}, user-scalable=no`;
             }
+
             setScale();
             window.addEventListener('resize', setScale);
         })();
     </script>
-    <style>
-        .iframepage {
-            -webkit-overflow-scrolling: touch;
-            overflow-x: scroll;
-            overflow-y: hidden;
-        }
-
-        ::-webkit-scrollbar {
-            width: 0px;
-        }
-
-        .scroll-el {
-            overflow: auto;
-        }
-    </style>
 </head>
-
 <body onload="goFullScreen()">
     <!-- 音乐播放器 -->
     <audio src="../music/2.mp3" autoplay="autoplay" loop="loop"></audio>
